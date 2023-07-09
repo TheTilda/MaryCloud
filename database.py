@@ -22,7 +22,7 @@ class Database():
         self.sql.execute(f'SELECT user_id FROM users WHERE user_id = {user_id}')
         if self.sql.fetchone() is None:
             
-            self.sql.execute(f'INSER INTO users VALUES ({user_id}, 0, "RU", "{date.today()}", "{utm}")')
+            self.sql.execute(f'INSERT INTO users VALUES ({user_id}, 0, "RU", "{date.today()}", "{utm}")')
             self.db.commit()
             return 'ok'
         return 'skip'
