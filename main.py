@@ -20,11 +20,15 @@ dp = Dispatcher(bot, storage=storage)
 async def start(message):
     user = db.reg_user(user_id=message.chat.id, utm='global')
     await message.reply(hello_text)
+
     if user == 'ok':
         print('зарегали пользователя')
     elif user == 'skip':
         print('юзер зареган')
 
+@dp.message_handler(content_types=['DOCUMENT', 'PHOTO', 'VIDEO', 'AUDIO', 'STICKER','VIDEO_NOTE', 'CONTACT', 'LOCATION', 'GAME', 'VOICE'])
+async def get_file():
+    pass
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
