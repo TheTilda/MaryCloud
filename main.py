@@ -1,34 +1,13 @@
-from database import Database
-from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher import FSMContext
-from aiogram.types import \
-    ReplyKeyboardMarkup, KeyboardButton, \
-    InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils import executor
-from config import *
+from createbot import dp, bot
+from handlers import client, files
 
 
-#инициализация базы данных
-db = Database()
+#Определение хендлеров
+client.register_handler(dp)
+files.register_handler(dp)
 
-bot = Bot(token=token)
-storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
 
-@dp.message_handler(commands=['start'])
-async def start(message):
-    user = db.reg_user(user_id=message.chat.id, utm='global')
-    await message.reply(hello_text)
-
-    if user == 'ok':
-        print('зарегали пользователя')
-    elif user == 'skip':
-        print('юзер зареган')
-
-@dp.message_handler(content_types=['DOCUMENT', 'PHOTO', 'VIDEO', 'AUDIO', 'STICKER','VIDEO_NOTE', 'CONTACT', 'LOCATION', 'GAME', 'VOICE'])
-async def get_file():
-    pass
-
+#Запуск бота
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
