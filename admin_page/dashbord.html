@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        #username {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #configButtons {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+            #configButtons button {
+                margin: 0 10px;
+                padding: 10px 20px;
+            }
+
+        #editForm {
+            max-width: 500px;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+            #editForm textarea {
+                width: 100%;
+                height: 200px;
+                margin: 10px 0;
+                padding: 5px;
+            }
+
+            #editForm input[type="submit"] {
+                margin-top: 10px;
+                padding: 5px 10px;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 150px auto;
+            padding: 20px;
+            width: 300px;
+            background-color: #fff;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .modal button {
+            margin-top: 10px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="username">{{ username }}</div>
+    <div id="configButtons">
+        <button onclick="loadConfig()">Upload Config</button>
+        <button onclick="confirmUpdate()">Update Config</button>
+    </div>
+
+    <div id="editForm">
+        <h2>Edit Config</h2>
+      
+            <form id="configForm" action="" method="post" enctype="multipart/form-data">
+                <textarea id="configInput" name="config" rows="10"></textarea><br>
+                <input type="submit" value="Save">
+            </form>
+</div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to update the config?</p>
+            <p>Old file date: <span id="oldDate"></span></p>
+            <p>New file date: <span id="newDate"></span></p>
+            <button onclick="updateConfig()">Confirm</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function loadConfig() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function (event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const contents = e.target.result;
+                    document.getElementById('configInput').value = contents;
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function confirmUpdate() {
+            const modal = document.getElementById('modal');
+            const oldDate = new Date().toLocaleString();
+            const newDate = new Date().toLocaleString(); // Ваша реализация получения новой даты файла
+            document.getElementById('oldDate').textContent = oldDate;
+            document.getElementById('newDate').textContent = newDate;
+            modal.style.display = 'block';
+        }
+
+        function updateConfig() {
+            // Ваш код для обновления конфига
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        const form = document.getElementById("configForm");
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault(); // Предотвратить отправку формы по умолчанию
+
+    const textarea = document.getElementById("configInput");
+    const config = JSON.parse(textarea.value); // Преобразовать текст в объект JSON
+
+    // Отправить обновленный объект JSON на сервер
+    fetch("ссылка_на_обработчик", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(config)
+    }).then(response => {
+        console.log("Изменения успешно сохранены");
+        // Дополнительный код, который должен выполниться после сохранения изменений
+    }).catch(error => {
+        console.error("Произошла ошибка при сохранении изменений", error);
+    });
+});
+
+
+    </script>
+</body>
+</html>
