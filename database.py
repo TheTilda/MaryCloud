@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import date
+from libs import gen
 
 
 class Database():
@@ -15,6 +16,13 @@ class Database():
             language TEXT,
             date_registration TEXT,
             utm TEXT
+        )""")
+        self.sql.execute(f"""CREATE TABLE IF NOT EXISTS files (
+            file_id TEXT,
+            file_type TEXT,
+            file_hash TEXT,
+            count_view BIGINT,
+            creator BIGINT
         )""")
         self.db.commit()
 
@@ -32,5 +40,53 @@ class Database():
             return 'none'
         else:
             return user
+    def get_file(self, code):
+        file = self.sql.execute(f"SELECT file_type, file_hash FROM files WHERE file_id = '{code}'").fetchone()
+        content_type = file[0]
+        hash = file[1]
+        return [content_type, hash]
+        
+    def upload_file(self, message):
+        file_id = gen.gen_hash(27)
+        if message.content_type == 'video':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.video.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+
+        if message.content_type == 'voice':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.voice.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+
+        if message.content_type == 'video_note':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.video_note.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+
+        if message.content_type == 'animation':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.animation.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+
+        if message.content_type == 'photo':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.photo[-1].file_id}', 0, {message.chat.id})")
+            self.db.commit()
+
+        if message.content_type == 'document':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.document.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+
+        if message.content_type == 'audio':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.audio.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+        if message.content_type == 'location':
+            loc = str(str(message.location.latitude) + '/' + str(message.location.longitude))
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', 'location', '{loc}', 0, {message.chat.id})")
+            self.db.commit()
+        # if message.content_type == 'location':
+        #     self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.location.file_id}', 0, {message.chat.id})")
+        #     self.db.commit()
+
+        if message.content_type == 'sticker':
+            self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.sticker.file_id}', 0, {message.chat.id})")
+            self.db.commit()
+        self.db.commit()
+        return file_id
 
 
