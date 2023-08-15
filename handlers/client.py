@@ -35,9 +35,12 @@ async def send_file(file, bot, message):
 #@dp.message_handler(commands=['start'])
 async def start(message):
     user = db.reg_user(user_id=message.chat.id, utm='global')
-
-    code = (message.text).split(' ')[1]
-    print(code[0:4])
+    
+    code = ''
+    try:
+        code = (message.text).split(' ')[1]
+    except:
+        pass
 
     #сортировка типа ссылки
     if code[0:4] == 'file':
@@ -45,7 +48,7 @@ async def start(message):
         file = db.get_file(code.replace('file', ''))
         print(file[0])
         await send_file(file, bot, message)
-    elif code[0:3] == 'fold':
+    elif code[0:4] == 'fold':
         pass
 
     #приветственный месседж
@@ -54,10 +57,13 @@ async def start(message):
     if user == 'ok':
         print('зарегали пользователя')
     elif user == 'skip':
-        print('юзер зареган')
+        print('юзер уже был зареган')
 
-
+#обработчик кнопки "Создать папку"
+async def create_folder(message):
+    pass
 
 #заносим сюда хендлеры по примеру ниже
 def register_handler(dp : Dispatcher):
     dp.register_message_handler(start, commands=['start'])
+    dp.register_message_handler(create_folder, text='Создать папку')
