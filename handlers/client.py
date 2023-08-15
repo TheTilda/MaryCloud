@@ -30,14 +30,16 @@ async def send_file(file, bot, message):
     if file[0] == 'location':
         loc = file[1].split('/')
         await bot.send_location(message.chat.id, loc[0], loc[1]) 
-        
-           
+
+
 #@dp.message_handler(commands=['start'])
 async def start(message):
     user = db.reg_user(user_id=message.chat.id, utm='global')
 
     code = (message.text).split(' ')[1]
     print(code[0:4])
+
+    #сортировка типа ссылки
     if code[0:4] == 'file':
         print('приняли файл')
         file = db.get_file(code.replace('file', ''))
@@ -46,7 +48,7 @@ async def start(message):
     elif code[0:3] == 'fold':
         pass
 
-
+    #приветственный месседж
     await message.reply(hello_text)
 
     if user == 'ok':
