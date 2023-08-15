@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\handlers",
+    "\\html"
   ],
-  "SelectedNode": "\\C:\\Users\\Windows\\Desktop\\mary",
+  "SelectedNode": "\\main.py",
   "PreviewInSolutionExplorer": false
 }

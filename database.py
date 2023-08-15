@@ -2,8 +2,9 @@ import sqlite3
 from datetime import date
 from libs import gen
 
-file_id =""
+
 class Database():
+    file_id =""
     def __init__(self) -> None:
         DB_FILE = 'base.db'
         #Коннект к базе
