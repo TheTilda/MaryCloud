@@ -2,7 +2,7 @@ import sqlite3
 from datetime import date
 from libs import gen
 
-
+file_id =""
 class Database():
     def __init__(self) -> None:
         DB_FILE = 'base.db'
@@ -87,6 +87,12 @@ class Database():
             self.sql.execute(f"INSERT INTO files VALUES ('{file_id}', '{message.content_type}', '{message.sticker.file_id}', 0, {message.chat.id})")
             self.db.commit()
         self.db.commit()
+        print("id if file to:  "+ file_id)
         return file_id
+        
+
+
+
+        
 
 

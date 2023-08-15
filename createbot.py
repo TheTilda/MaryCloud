@@ -4,7 +4,6 @@ from config import *
 from database import Database
 from libs import gen
 
-
 db = Database()
 bot = Bot(token=token)
 storage = MemoryStorage()
