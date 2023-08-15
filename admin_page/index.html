@@ -26,6 +26,16 @@
                 margin-top: 20px;
                 padding: 10px 20px;
             }
+        h1 {
+            text-align: center;
+        }
+
+        #telegram-login-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -35,8 +45,17 @@
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
             <input type="submit" value="Login">
-            
+
         </form>
+
+
+        <h1>Вход через Telegram</h1>
+        <script async src="https://telegram.org/js/telegram-widget.js?22"
+                data-telegram-login="YouCloudtg_bot" data-size="large" data-auth-url="marycl.ru"></script>
+
+
+
+
     </div>
 </body>
 </html>
