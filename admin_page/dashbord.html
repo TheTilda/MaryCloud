@@ -82,57 +82,73 @@
 <body>
     <div id="username">{{ username }}</div>
     <div id="configButtons">
-        <button onclick="loadConfig()">Upload Config</button>
-        <button onclick="confirmUpdate()">Update Config</button>
+        <button onclick="loadConfig()">Р—Р°РіСЂСѓР·РёС‚СЊ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ</button>
+        <button onclick="confirmUpdate()">РћР±РЅРѕРІРёС‚СЊ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ</button>
     </div>
 
     <div id="editForm">
-        <h2>Edit Config</h2>
+        <h2>Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ</h2>
       
             <form id="configForm" action="" method="post" enctype="multipart/form-data">
                 <textarea id="configInput" name="config" rows="10"></textarea><br>
-                <input type="submit" value="Save">
             </form>
 </div>
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <p>Are you sure you want to update the config?</p>
-            <p>Old file date: <span id="oldDate"></span></p>
-            <p>New file date: <span id="newDate"></span></p>
-            <button onclick="updateConfig()">Confirm</button>
-            <button onclick="closeModal()">Cancel</button>
+            <p>Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РѕР±РЅРѕРІРёС‚СЊ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ?</p>
+            <p>Р”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ: <span id="oldDate"></span></p>
+            <p>РќРѕРІР°СЏ РґР°С‚Р° РёР·РјРµРЅРµРЅРёСЏ: <span id="newDate"></span></p>
+            <button onclick="updateConfig()">РЎРѕС…СЂР°РЅСЏС‚СЊ</button>
+            <button onclick="closeModal()">РќР°Р·Р°Рґ</button>
         </div>
     </div>
 
     <script>
-        function loadConfig() {
+       datetime_file = "";
+       var currentFile = null;
+
+       function loadConfig() {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
             input.onchange = function (event) {
-                const file = event.target.files[0];
+                currentFile = event.target.files[0];
+                console.log('Р¤Р°Р№Р» Р·Р°РіСЂСѓР¶РµРЅ:', currentFile);
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const contents = e.target.result;
                     document.getElementById('configInput').value = contents;
+                    datetime_file = currentFile.lastModifiedDate;
                 };
-                reader.readAsText(file);
+                reader.readAsText(currentFile);
             };
             input.click();
         }
-
+       
         function confirmUpdate() {
             const modal = document.getElementById('modal');
-            const oldDate = new Date().toLocaleString();
-            const newDate = new Date().toLocaleString(); // Ваша реализация получения новой даты файла
+            const oldDate = datetime_file.toLocaleString();
+            const newDate = new Date().toLocaleString(); 
             document.getElementById('oldDate').textContent = oldDate;
             document.getElementById('newDate').textContent = newDate;
             modal.style.display = 'block';
         }
 
         function updateConfig() {
-            // Ваш код для обновления конфига
+             if (currentFile) {
+               const configContents = document.getElementById('configInput').value;
+               const blob = new Blob([configContents], { type: 'application/json' });
+               const url = URL.createObjectURL(blob);
+               const downloadLink = document.createElement('a');
+               downloadLink.href = url;
+               downloadLink.download = currentFile.name;
+               downloadLink.click();
+               URL.revokeObjectURL(url);
+               console.log('Р¤Р°Р№Р» РѕР±РЅРѕРІР»РµРЅ:', currentFile);
+                } else {
+                    console.log('РќРµС‚ РѕС‚РєСЂС‹С‚РѕРіРѕ С„Р°Р№Р»Р°');
+                    }
             closeModal();
         }
 
@@ -142,24 +158,24 @@
 
         const form = document.getElementById("configForm");
 
-form.addEventListener("submit", function(event) {
-    event.preventDefault(); // Предотвратить отправку формы по умолчанию
+        form.addEventListener("submit", function(event) {
+    event.preventDefault(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
     const textarea = document.getElementById("configInput");
-    const config = JSON.parse(textarea.value); // Преобразовать текст в объект JSON
+    const config = JSON.parse(textarea.value); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ JSON
 
-    // Отправить обновленный объект JSON на сервер
-    fetch("ссылка_на_обработчик", {
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ JSON пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    fetch("пїЅпїЅпїЅпїЅпїЅпїЅ_пїЅпїЅ_пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(config)
     }).then(response => {
-        console.log("Изменения успешно сохранены");
-        // Дополнительный код, который должен выполниться после сохранения изменений
+        console.log("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }).catch(error => {
-        console.error("Произошла ошибка при сохранении изменений", error);
+        console.error("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", error);
     });
 });
 
